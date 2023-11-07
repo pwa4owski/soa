@@ -6,13 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-//import javax.validation.constraints.NotNull;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class Location {
+public class LocationDto {
+
     @NotNull
     private Integer x;
 
@@ -21,4 +21,6 @@ public class Location {
 
     @NotNull
     private String name;
+
+
 }

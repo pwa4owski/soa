@@ -14,7 +14,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Person {
+public class PersonDto {
 
     @NotNull
     @Min(value = 1)
@@ -25,7 +25,7 @@ public class Person {
 
     @NotNull
     @Valid
-    private Coordinates coordinates;
+    private CoordinatesDto coordinatesDto;
 
     @Generated
     private Date creationDate;
@@ -47,7 +47,7 @@ public class Person {
 
     @NotNull
     @Valid
-    private Location location;
+    private LocationDto locationDto;
 
     @NotBlank
     private String hairColor;

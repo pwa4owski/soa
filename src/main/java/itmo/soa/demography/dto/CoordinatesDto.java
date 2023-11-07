@@ -8,16 +8,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-//import javax.validation.constraints.Max;
-//import javax.validation.constraints.Min;
-//import javax.validation.constraints.NotNull;
-
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class Coordinates {
+public class CoordinatesDto {
+
     @Min(value = -234)
     private int x;
 
