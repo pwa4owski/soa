@@ -7,6 +7,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +25,13 @@ public class MyExceptionMapper implements ExceptionMapper<ConstraintViolationExc
     private Map<String, String> prepareMessage(ConstraintViolationException exception) {
         Map<String, String> errors = new HashMap<>();
         for (ConstraintViolation<?> cv : exception.getConstraintViolations()) {
-            errors.put(String.valueOf(cv.getPropertyPath()), cv.getMessage() );
+            try {
+                errors.put(Arrays.stream(cv.getPropertyPath().toString()
+                        .split("\\.arg\\d\\.")).skip(1).findFirst().get(), cv.getMessage());
+            }
+            catch (Exception e) {
+                errors.put("message", cv.getMessage());
+            }
         }
         return errors;
     }

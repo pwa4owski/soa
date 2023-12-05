@@ -1,6 +1,8 @@
 package itmo.soa.demography.repo;
 
 import itmo.soa.demography.model.Person;
+import itmo.soa.demography.util.Pageable;
+import itmo.soa.demography.util.Page;
 import jakarta.ejb.LocalBean;
 
 import java.util.List;
@@ -19,5 +21,9 @@ public interface PersonRepository {
 
     List<Person> getAll();
 
-    void deletePersonsWithLessWeight(Double weight);
+    Page getPage(Pageable pageable);
+
+    void deletePersonsWithWeightEqual(Double weight);
+
+    List<Person> getPersonsWithWeightLessThan(double weight);
 }

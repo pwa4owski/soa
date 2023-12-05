@@ -1,14 +1,18 @@
 package itmo.soa.demography.dto;
 
 
+import itmo.soa.demography.model.Country;
+import jakarta.json.bind.annotation.JsonbDateFormat;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.ZonedDateTime;
-import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,16 +29,16 @@ public class PersonDto {
 
     @NotNull
     @Valid
-    private CoordinatesDto coordinatesDto;
+    private CoordinatesDto coordinates;
 
-    @Generated
-    private Date creationDate;
+  //  private Date creationDate;
 
     @NotNull
     @Min(value = 1)
     private Long height;
 
     @NotNull
+    @JsonbDateFormat(value = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
     private ZonedDateTime birthday;
 
     @NotNull
@@ -47,7 +51,7 @@ public class PersonDto {
 
     @NotNull
     @Valid
-    private LocationDto locationDto;
+    private LocationDto location;
 
     @NotBlank
     private String hairColor;

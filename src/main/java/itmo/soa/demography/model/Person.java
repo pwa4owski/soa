@@ -1,8 +1,8 @@
 package itmo.soa.demography.model;
 
 
-import itmo.soa.demography.dto.Country;
 import itmo.soa.demography.dto.PersonDto;
+import jakarta.json.bind.annotation.JsonbDateFormat;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -11,6 +11,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
@@ -21,7 +22,7 @@ import java.util.Date;
 @Builder
 @Entity
 @Table(schema = "soa", name = "person")
-public class  Person {
+public class Person implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,6 +39,7 @@ public class  Person {
 
     @Generated
     @CreationTimestamp
+    @JsonbDateFormat(value = "yyyy-MM-dd")
     private Date creationDate;
 
     @NotNull
@@ -45,6 +47,7 @@ public class  Person {
     private Long height;
 
     @NotNull
+    @JsonbDateFormat(value = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
     private ZonedDateTime birthday;
 
     @NotNull
@@ -65,13 +68,13 @@ public class  Person {
 
     public static Person createFromDto(@Valid PersonDto personDto) {
         Coordinates coordinates = Coordinates.builder()
-                .x(personDto.getCoordinatesDto().getX())
-                .y(personDto.getCoordinatesDto().getY())
+                .x(personDto.getCoordinates().getX())
+                .y(personDto.getCoordinates().getY())
                 .build();
         Location location = Location.builder()
-                .name(personDto.getLocationDto().getName())
-                .x(personDto.getLocationDto().getX())
-                .y(personDto.getLocationDto().getY())
+                .name(personDto.getLocation().getName())
+                .x(personDto.getLocation().getX())
+                .y(personDto.getLocation().getY())
                 .build();
         return Person.builder()
                 .coordinates(coordinates)
