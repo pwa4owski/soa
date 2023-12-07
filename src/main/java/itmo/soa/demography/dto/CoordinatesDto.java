@@ -15,10 +15,10 @@ import lombok.Setter;
 @Setter
 public class CoordinatesDto {
 
-    @Min(value = -234)
+    @Min(value = -234, message = "Должно быть больше или равно -234")
     private int x;
 
     @NotNull
-    @Max(value = 456)
+    @Max(value = 456, message = "Должно быть меньше или равно -234")
     private Integer y;
 }

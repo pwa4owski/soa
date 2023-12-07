@@ -1,5 +1,6 @@
 package itmo.soa.demography.resource;
 
+import itmo.soa.demography.dto.CountryErrorWrapper;
 import itmo.soa.demography.dto.LocationDto;
 import itmo.soa.demography.dto.PersonDto;
 import itmo.soa.demography.model.Person;
@@ -53,7 +54,17 @@ public class CrudResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addPerson(@Valid PersonDto personDto){
-        Person person = service.addPerson(personDto);
+        Person person;
+        try {
+            person = service.addPerson(personDto);
+        }
+        catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(CountryErrorWrapper.builder()
+                            .nationality(e.getMessage()).build())
+                    .type(MediaType.APPLICATION_JSON)
+                    .build();
+        }
         return Response.ok().entity(person).build();
     }
 

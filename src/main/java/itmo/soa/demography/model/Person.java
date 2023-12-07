@@ -3,6 +3,7 @@ package itmo.soa.demography.model;
 
 import itmo.soa.demography.dto.PersonDto;
 import jakarta.json.bind.annotation.JsonbDateFormat;
+import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -66,7 +67,7 @@ public class Person implements Serializable {
     @NotBlank
     private String hairColor;
 
-    public static Person createFromDto(@Valid PersonDto personDto) {
+    public static Person createFromDto(@Valid PersonDto personDto) throws IllegalArgumentException {
         Coordinates coordinates = Coordinates.builder()
                 .x(personDto.getCoordinates().getX())
                 .y(personDto.getCoordinates().getY())
@@ -76,15 +77,23 @@ public class Person implements Serializable {
                 .x(personDto.getLocation().getX())
                 .y(personDto.getLocation().getY())
                 .build();
-        return Person.builder()
-                .coordinates(coordinates)
-                .birthday(personDto.getBirthday())
-                .hairColor(personDto.getHairColor())
-                .height(personDto.getHeight())
-                .location(location)
-                .nationality(personDto.getNationality())
-                .name(personDto.getName())
-                .weight(personDto.getWeight())
-                .build();
+        Person person;
+        try {
+            person = Person.builder()
+                    .coordinates(coordinates)
+                    .birthday(personDto.getBirthday())
+                    .hairColor(personDto.getHairColor())
+                    .height(personDto.getHeight())
+                    .location(location)
+                    .nationality(Country.valueOf(personDto.getNationality().toUpperCase()))
+                    .name(personDto.getName())
+                    .weight(personDto.getWeight())
+                    .build();
+        }
+        catch (Exception e) {
+            throw new IllegalArgumentException("неверный формат");
+        }
+
+        return person;
     }
 }

@@ -1,5 +1,6 @@
 package itmo.soa.demography.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,13 +14,13 @@ import lombok.Setter;
 @Setter
 public class LocationDto {
 
-    @NotNull
+    @NotNull(message = "Должно быть заполнено")
     private Integer x;
 
-    @NotNull
+    @NotNull(message = "Должно быть заполнено")
     private Integer y;
 
-    @NotNull
+    @NotBlank(message = "Не должно быть пустым")
     private String name;
 
 

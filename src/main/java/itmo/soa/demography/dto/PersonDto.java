@@ -1,6 +1,8 @@
 package itmo.soa.demography.dto;
 
 
+import itmo.soa.demography.EnumNamePattern;
+
 import itmo.soa.demography.model.Country;
 import jakarta.json.bind.annotation.JsonbDateFormat;
 import jakarta.validation.Valid;
@@ -20,11 +22,11 @@ import java.time.ZonedDateTime;
 @Setter
 public class PersonDto {
 
-    @NotNull
+    //@NotNull
     @Min(value = 1)
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "Не должно быть пустым")
     private String name;
 
     @NotNull
@@ -34,7 +36,7 @@ public class PersonDto {
   //  private Date creationDate;
 
     @NotNull
-    @Min(value = 1)
+    @Min(value = 1, message = "Должно быть положительный")
     private Long height;
 
     @NotNull
@@ -42,17 +44,19 @@ public class PersonDto {
     private ZonedDateTime birthday;
 
     @NotNull
-    @Min(value = 1)
+    @Min(value = 1, message = "Должно быть положительным")
     private Double weight;
 
-    @NotNull
-    @Valid
-    private Country nationality;
+    @NotBlank(message = "Не должно быть пустым")
+    //@Valid
+    //@EnumNamePattern(regexp = "GERMANY|RUSSIA|UNITED_KINGDOM|THAILAND")
+//    @EnumNamePattern()
+    private String nationality;
 
     @NotNull
     @Valid
     private LocationDto location;
 
-    @NotBlank
+    @NotBlank(message = "Не должно быть пустым")
     private String hairColor;
 }
