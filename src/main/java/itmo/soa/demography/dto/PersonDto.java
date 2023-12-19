@@ -1,14 +1,9 @@
 package itmo.soa.demography.dto;
 
 
-import itmo.soa.demography.EnumNamePattern;
-
-import itmo.soa.demography.model.Country;
 import jakarta.json.bind.annotation.JsonbDateFormat;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +22,7 @@ public class PersonDto {
     private Long id;
 
     @NotBlank(message = "Не должно быть пустым")
+    @Size(max = 255, message = "Слишком длинная строка")
     private String name;
 
     @NotNull
@@ -48,9 +44,10 @@ public class PersonDto {
     private Double weight;
 
     @NotBlank(message = "Не должно быть пустым")
+    @Pattern(regexp = "GERMANY|RUSSIA|UNITED_KINGDOM|THAILAND", flags = Pattern.Flag.CASE_INSENSITIVE,
+            message = "неверно введена страна")
     //@Valid
     //@EnumNamePattern(regexp = "GERMANY|RUSSIA|UNITED_KINGDOM|THAILAND")
-//    @EnumNamePattern()
     private String nationality;
 
     @NotNull
@@ -58,5 +55,6 @@ public class PersonDto {
     private LocationDto location;
 
     @NotBlank(message = "Не должно быть пустым")
+    @Size(max = 255, message = "Слишком длинная строка")
     private String hairColor;
 }

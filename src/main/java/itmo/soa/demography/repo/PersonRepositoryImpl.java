@@ -19,7 +19,7 @@ public class PersonRepositoryImpl implements PersonRepository{
             .createEntityManagerFactory("primary")
             .createEntityManager();
 
-    //Session session = entityManager.unwrap(org.hibernate.Session.class);
+//    Session session = entityManager.unwrap(org.hibernate.Session.class);
 
     @Override
     @Transactional
@@ -34,8 +34,9 @@ public class PersonRepositoryImpl implements PersonRepository{
     @Transactional
     public Person updatePersonById(Long id, Person person) {
         entityManager.getTransaction().begin();
-        if(entityManager.find(Person.class, id) == null) {
-            throw new NotFoundException("нет элемента с id " + id);
+        if (entityManager.find(Person.class, id) == null) {
+            entityManager.getTransaction().commit();
+            return null;
         }
         person.setId(id);
 
@@ -48,21 +49,20 @@ public class PersonRepositoryImpl implements PersonRepository{
 
     @Override
     @Transactional
-    public void deletePersonById(Long id) {
+    public boolean deletePersonById(Long id) {
+        boolean res = false;
         entityManager.getTransaction().begin();
-        Person person = entityManager.find(Person.class, id);
-        if(person == null){
-            throw new NotFoundException("нет элемента с id " + id);
-        }
-        entityManager.remove(person);
+        res =  entityManager.createQuery("DELETE FROM Person p WHERE p.id=:id")
+                .setParameter("id", id)
+                .executeUpdate() != 0;
         entityManager.getTransaction().commit();
+        return res;
     }
 
     @Override
     @Transactional
     public Optional<Person> getPersonById(Long id) {
-        Person person = entityManager.find(Person.class, id);
-        return Optional.of(person);
+        return Optional.ofNullable(entityManager.find(Person.class, id));
     }
 
     @Override

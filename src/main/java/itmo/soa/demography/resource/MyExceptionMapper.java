@@ -24,13 +24,14 @@ public class MyExceptionMapper implements ExceptionMapper<ConstraintViolationExc
 
     private Map<String, String> prepareMessage(ConstraintViolationException exception) {
         Map<String, String> errors = new HashMap<>();
+        int cnt = 0;
         for (ConstraintViolation<?> cv : exception.getConstraintViolations()) {
             try {
                 errors.put(Arrays.stream(cv.getPropertyPath().toString()
                         .split("\\.arg\\d\\.")).skip(1).findFirst().get(), cv.getMessage());
             }
             catch (Exception e) {
-                errors.put("message", cv.getMessage());
+                errors.put("message" + cnt++, cv.getMessage());
             }
         }
         return errors;

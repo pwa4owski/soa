@@ -42,7 +42,10 @@ public class PersonsService {
 
     public Person updatePersonById(long id, PersonDto personDto) {
         Person person = Person.createFromDto(personDto);
-        return repo.updatePersonById(id, person);
+        person = repo.updatePersonById(id, person);
+        if(person == null)
+             throw new NotFoundException("нет элемента с id " + id);
+        return person;
     }
 
     public void deletePersonsWithLessWeight(Double weight) {
@@ -62,8 +65,11 @@ public class PersonsService {
                 .forEach(p -> repo.deletePersonById(p.getId()));
     }
 
+    @Transactional
     public void deletePerson(Long id) {
-        repo.deletePersonById(id);
+         if(!repo.deletePersonById(id)) {
+             throw new NotFoundException("Нет элемента с id " + id);
+         }
     }
 
     @Transactional

@@ -1,6 +1,5 @@
 package itmo.soa.demography.resource;
 
-import itmo.soa.demography.dto.CountryErrorWrapper;
 import itmo.soa.demography.dto.LocationDto;
 import itmo.soa.demography.dto.PersonDto;
 import itmo.soa.demography.model.Person;
@@ -8,9 +7,10 @@ import itmo.soa.demography.sevice.PersonsService;
 import itmo.soa.demography.util.Page;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Pattern;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -35,10 +35,22 @@ public class CrudResource {
     public Response getPersons(
             @QueryParam("filter") List<String> filters,
             @QueryParam("sort") List<String> sorts,
-            @QueryParam("page") @Min(message = "page must be positive", value = 0) int page,
-            @QueryParam("size") @Positive(message = "size must be positive") @DefaultValue("25") int size
+            @QueryParam("page") @Pattern(regexp = "^0|[1-9]+\\d*$", message = "page must be not negative integer")
+                @DefaultValue("0") String pageParam,
+            @QueryParam("size") @Pattern(regexp = "[1-9]+\\d*$", message = "size must be positive integer")
+                @DefaultValue("25") String sizeParam
     ) {
-        Page res = service.getPage(filters, sorts, page, size);
+        Page res;
+        try {
+            int page = Integer.parseInt(pageParam);
+            int size = Integer.parseInt(sizeParam);
+            if(page < 0 || size <= 0) {
+                throw new ValidationException();
+            }
+            res = service.getPage(filters, sorts, page, size);
+        } catch (NumberFormatException|ValidationException e){
+            res = service.getPage(filters, sorts, 0, 25);
+        }
         return Response.ok().entity(res).build();
     }
 
@@ -54,17 +66,7 @@ public class CrudResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addPerson(@Valid PersonDto personDto){
-        Person person;
-        try {
-            person = service.addPerson(personDto);
-        }
-        catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(CountryErrorWrapper.builder()
-                            .nationality(e.getMessage()).build())
-                    .type(MediaType.APPLICATION_JSON)
-                    .build();
-        }
+        Person person = service.addPerson(personDto);
         return Response.ok().entity(person).build();
     }
 

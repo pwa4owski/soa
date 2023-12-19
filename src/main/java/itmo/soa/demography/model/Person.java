@@ -3,7 +3,6 @@ package itmo.soa.demography.model;
 
 import itmo.soa.demography.dto.PersonDto;
 import jakarta.json.bind.annotation.JsonbDateFormat;
-import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -77,9 +76,7 @@ public class Person implements Serializable {
                 .x(personDto.getLocation().getX())
                 .y(personDto.getLocation().getY())
                 .build();
-        Person person;
-        try {
-            person = Person.builder()
+        return Person.builder()
                     .coordinates(coordinates)
                     .birthday(personDto.getBirthday())
                     .hairColor(personDto.getHairColor())
@@ -89,11 +86,5 @@ public class Person implements Serializable {
                     .name(personDto.getName())
                     .weight(personDto.getWeight())
                     .build();
-        }
-        catch (Exception e) {
-            throw new IllegalArgumentException("неверный формат");
-        }
-
-        return person;
     }
 }

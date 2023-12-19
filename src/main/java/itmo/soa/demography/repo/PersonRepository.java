@@ -15,7 +15,7 @@ public interface PersonRepository {
 
     Person updatePersonById(Long id, Person person);
 
-    void deletePersonById(Long id);
+    boolean deletePersonById(Long id);
 
     Optional<Person> getPersonById(Long id);
 
